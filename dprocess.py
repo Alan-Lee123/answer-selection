@@ -3,7 +3,6 @@ import re
 import random
 import numpy
 import jieba
-from scipy.sparse import csr_matrix
 
 word_dict = {}
 qa_list = []
@@ -31,8 +30,6 @@ def sentence_to_words(sentence):
             if item_words[i] in punc_list:
                 continue
             words.append(item_words[i])
-    if(len(words) == 0):
-        words.append(' ')
     return words
 
 
@@ -251,26 +248,26 @@ def get_test_data(filename):
 
 
 def trans_tag(tag):
-    tags = numpy.zeros((len(tag), 3), dtype=numpy.float32)
+    t1 = numpy.zeros(len(tag))
+    t2 = numpy.zeros(len(tag))
     for k in range(len(tag)):
-        tags[k][0] = tag[0]
         if tag[k] == 0:
-            tags[k][1] = 0
-            tags[k][2] = 0
+            t1[k] = 0
+            t2[k] = 0
         elif tag[k] == 1:
-            tags[k][1] = 1
-            tags[k][2] = 0
+            t1[k] = 1
+            t2[k] = 0
         else:
-            tags[k][1] = 0
-            tags[k][2] = 1
-    return tags
+            t1[k] = 0
+            t2[k] = 1
+    return t1, t2
 
 
 def evaluate_mrr(tag_lists, preds):
     idx = 0
     cnt = 0
     score = 0
-    preds = [t[1] for t in preds]
+    preds = [t[0] for t in preds[1]]
     for tags in tag_lists:
         pred = preds[idx: idx + len(tags)]
         idx += len(tags)
@@ -283,14 +280,3 @@ def evaluate_mrr(tag_lists, preds):
                 cnt += 1
                 score += 1. / orders[k]
     return score / cnt
-
-def to_sparse(X, word_num):
-    Y = []
-    for arr in X:
-        row = numpy.array(range(len(arr)))
-        col = numpy.array(arr)
-        data = numpy.ones(len(arr))
-        y = csr_matrix((data, (row, col)), shape=(len(arr), word_num), dtype=numpy.float32)
-        Y.append(y)
-    return Y
-    
