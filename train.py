@@ -18,8 +18,8 @@ conv_layer_num = 3
 epoches = 8
 batch_size = 128
 
-train_path = 'bop-train.txt'
-dev_path = 'bop-dev.txt'
+train_path = 'BoP2017-DBQA.train.txt'
+dev_path = 'BoP2017-DBQA.dev.txt'
 vec_path = 'zh.tsv'
 
 dprocess.load_qa_list([train_path, dev_path])
