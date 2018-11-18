@@ -20,7 +20,7 @@ batch_size = 128
 
 train_path = 'BoP2017-DBQA.train.txt'
 dev_path = 'BoP2017-DBQA.dev.txt'
-vec_path = 'zh.tsv'
+vec_path = 'sgns.wiki.word'
 
 dprocess.load_qa_list([train_path, dev_path])
 embedding_matrix = dprocess.get_embedding_matrix(

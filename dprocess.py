@@ -101,16 +101,21 @@ def get_embedding_matrix(filename, embedding_dim):
     embedding_dict = {}
     word = ''
     infile = open(filename, 'r', encoding='utf-8')
+    firstLine = True
     for line in infile:
-        items = re.split(' |\t|\v|\r|\n|\f|\[|\]', line)
-        if line[0] != ' ':
-            word = items[1]
+        if firstLine:
+            firstLine = False
+            continue
+        items = re.split(' ', line.strip())
+        if len(items) == embedding_dim + 1:
+            word = items[0]
             if word not in word_dict:
                 num_words = len(word_dict)
                 word_dict.setdefault(word, num_words + 1)
-            embedding_dict.setdefault(word, to_float_array(items[2:]))
-        else:
-            embedding_dict[word] += to_float_array(items)
+            embedding_dict.setdefault(word, to_float_array(items[1:]))
+        elif len(items) != 0:
+            print("ERROR! There are %d items" % len(items))
+            print(items)
     infile.close()
     embedding_matrix = numpy.zeros(
         (len(word_dict) + 1, embedding_dim), dtype='float32'
