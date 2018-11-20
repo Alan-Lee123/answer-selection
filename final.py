@@ -7,7 +7,6 @@ max_len = 64
 batch_size = 128
 
 test_path = 'BoP2017-DBQA.test.txt'
-vec_path = 'zh.tsv'
 
 dprocess.load_word_dict('word_dict1.txt')
 

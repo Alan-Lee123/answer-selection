@@ -97,15 +97,19 @@ def to_float_array(items):
     return num_arr
 
 
-def get_embedding_matrix(filename, embedding_dim):
+def get_embedding_matrix(filename, embedding_dim, maxWords=1000000):
     embedding_dict = {}
     word = ''
     infile = open(filename, 'r', encoding='utf-8')
     firstLine = True
+    cnt = 0
     for line in infile:
         if firstLine:
             firstLine = False
             continue
+        cnt += 1
+        if cnt > maxWords:
+            break
         items = re.split(' ', line.strip())
         if len(items) == embedding_dim + 1:
             word = items[0]
@@ -116,6 +120,7 @@ def get_embedding_matrix(filename, embedding_dim):
         elif len(items) != 0:
             print("ERROR! There are %d items" % len(items))
             print(items)
+            print(cnt)
     infile.close()
     embedding_matrix = numpy.zeros(
         (len(word_dict) + 1, embedding_dim), dtype='float32'
@@ -123,7 +128,7 @@ def get_embedding_matrix(filename, embedding_dim):
     for word, index in word_dict.items():
         embedding_vector = embedding_dict.get(word)
         if embedding_vector is None:
-            embedding_vector = [random.uniform(-1, 1) for i in range(300)]
+            embedding_vector = [random.uniform(-1, 1) for i in range(embedding_dim)]
             embedding_dict.setdefault(word, embedding_vector)
         if len(embedding_vector) != embedding_dim:
             print('Not padding embedding vector!')

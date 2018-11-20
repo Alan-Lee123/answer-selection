@@ -4,18 +4,9 @@ from keras.preprocessing.sequence import pad_sequences
 import numpy
 
 max_len = 64
-embedding_dim = 300
-lstm_unit = 512
-conv_unit = 64
-conv_step = 5
-conv_layer_num = 3
-
-epoches = 4
 batch_size = 128
 
-train_path = 'bop-train.txt'
-dev_path = 'bop-dev.txt'
-vec_path = 'zh.tsv'
+dev_path = 'BoP2017-DBQA.dev.txt'
 
 dprocess.load_word_dict('word_dict1.txt')
 
@@ -46,8 +37,6 @@ for i in range(len(preds)):
 
 pred_dev.close()
 
-print()
-
 scores = open('score.txt', 'w')
 
 idx = 0
@@ -64,6 +53,5 @@ for tags in dev_tag:
         if tags[k] == 1:
             cnt += 1
             score += 1. / orders[k]
-            print(orders[k], score / cnt)
             scores.write(str(int(orders[k])) + "\t" + str(score / cnt) + '\n')
 scores.close()
